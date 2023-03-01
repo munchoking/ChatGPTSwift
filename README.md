@@ -1,2 +1,5 @@
 # ChatGPTSwift
+
+#credits
  
+* OpenAISwift
