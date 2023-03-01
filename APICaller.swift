@@ -12,7 +12,7 @@ class APICaller {
     static let shared = APICaller()
     
     enum Constants {
-        static let key = "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"
+        static let key = "API KEY"
     }
     var client: OpenAISwift?
     
