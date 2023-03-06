@@ -12,7 +12,7 @@ class APICaller {
     static let shared = APICaller()
     
     enum Constants {
-        static let key = "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"
+        static let key = "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"
     }
     var client: OpenAISwift?
     
@@ -23,7 +23,7 @@ class APICaller {
     }
     
     func getResponse(input: String, completion: @escaping (Result<String, Error>) -> Void) {
-        client?.sendCompletion(with: input, model: .gpt3(.davinci), maxTokens: 200, completionHandler: { result in
+        client?.sendCompletion(with: input, model: .gpt3(.davinci), maxTokens: 1000, completionHandler: { result in
             switch result {
             case .success(let model):
                 print(String(describing: model.choices))
