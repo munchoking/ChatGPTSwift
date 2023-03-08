@@ -29,8 +29,6 @@ class TextInputAccessoryView: UIView {
         return textView
     }()
     
-    
-    
     let submitButton: UIButton = {
         let sb = UIButton(type: .system)
         sb.setImage(UIImage(systemName: "arrow.up.circle.fill"), for: .normal)
