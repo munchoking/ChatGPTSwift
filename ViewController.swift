@@ -9,78 +9,27 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate {
+class ViewController: UIViewController, UITableViewDelegate, TextInputAccessoryViewDelegate {
         
-    var containerView: UIView = {
-        let containerView = UIView()
-        containerView.backgroundColor = .white
-        containerView.frame = CGRect(x: 0, y: 0, width: 80, height: 80)
-//        containerView.layer.borderWidth = 1.5
-//        containerView.layer.cornerRadius = 5
-//        containerView.layer.borderColor = UIColor.lightGray.cgColor
-        
-    
-        let submitButton = UIButton(type: .system)
-        submitButton.setImage(UIImage(systemName: "arrow.up.circle.fill"), for: .normal)
-        containerView.addSubview(submitButton)
-        submitButton.addTarget(self, action: #selector(didTapSubmit), for: .touchUpInside)
-
-        submitButton.anchor(top: containerView.topAnchor, left: nil, bottom: containerView.bottomAnchor, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 15, paddingRight: 12, width: 50, height: 0)
-//        submitButton.addTarget(self, action: #selector(didTapSubmit), for: .touchUpInside)
-        
-        let textField = UITextField()
-        textField.placeholder = "Ask anything"
-        textField.setLeftPaddingPoints(10)
-        containerView.addSubview(textField)
-        textField.frame = CGRect(x: 0, y: 0, width: 50, height: 40)
-        textField.borderStyle = .none
-//        textField.layer.cornerRadius = textField.frame.height / 1.6
-//        textField.layer.borderColor = UIColor.lightGray.cgColor
-        textField.tag = 100
-        textField.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: containerView.bottomAnchor, right: submitButton.leftAnchor, paddingTop: 0, paddingLeft: 12, paddingBottom: 15, paddingRight: 12, width: 0, height: 0)
-        
-        let lineSeparator = UIView()
-        lineSeparator.backgroundColor = .lightGray
-        containerView.addSubview(lineSeparator)
-        lineSeparator.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0.5)
-    
-        return containerView
-        
+    lazy var containerView: TextInputAccessoryView = {
+        let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 70)
+        let textInputAccessoryView = TextInputAccessoryView(frame: frame)
+        textInputAccessoryView.delegate = self
+        return textInputAccessoryView
     }()
     
-
-
-    
-    @objc func didTapSubmit() {
+    func didTapSubmit(for input: String) {
         print(#function)
-        if let textField = containerView.viewWithTag(100) as? UITextField,
-            let inputText = textField.text, inputText.count > 3 {
+        if let textField = containerView.viewWithTag(100) as? UITextView,
+           let inputText = textField.text, inputText.count > 3 {
             fetchGPTChatResponse(prompt: inputText)
         } else {
-            print("Please check textfield")
+            print("Failed to submit")
         }
-//        if let promptText = textField.text, promptText.count > 3 {
-//            fetchGPTChatResponse(prompt: promptText)
-//        } else {
-//            print("Please check textfield")
-//        }
+        self.containerView.clearInputTextField()
     }
     
-    
-//    let field: UITextField = {
-//        let textField = UITextField(frame: CGRect(x: 20, y: 100, width: 200, height: 40))
-//        textField.placeholder = "Ask Anything"
-//        textField.setLeftPaddingPoints(10)
-//        textField.translatesAutoresizingMaskIntoConstraints = false
-//        textField.borderStyle = .none
-//        textField.layer.cornerRadius = textField.frame.height / 1.6
-//        textField.layer.borderWidth = 1.5
-//        textField.layer.borderColor = UIColor.lightGray.cgColor
-//        textField.returnKeyType = .done
-//        return textField
-//    }()
-        
-    
+
     
     lazy var table: UITableView = {
         let table = UITableView()
@@ -90,22 +39,6 @@ class ViewController: UIViewController, UITableViewDelegate {
         return table
     }()
     
-//    lazy var submitButton: UIButton = {
-//        let button = UIButton()
-//        var buttonConfig = UIButton.Configuration.plain()
-//        buttonConfig.imagePadding = 10
-//        let configuration = UIImage.SymbolConfiguration(scale: .large)
-//        let image = UIImage(systemName: "arrow.up.circle.fill", withConfiguration: configuration)
-//        buttonConfig.image = image
-//        button.configuration = buttonConfig
-//        button.translatesAutoresizingMaskIntoConstraints = false
-//        button.backgroundColor = .clear
-//        button.layer.cornerRadius = 10
-//        button.addTarget(self, action: #selector(didTapSubmit), for: .touchUpInside)
-//        field.rightView = button
-//        field.rightViewMode = .always
-//        return button
-//    }()
     
     var models = [String]()
     
@@ -156,9 +89,8 @@ class ViewController: UIViewController, UITableViewDelegate {
 //    }
     
     func configureUI() {
-//        view.addSubview(field)
+
         view.addSubview(table)
-//        view.addSubview(submitButton)
         
         view.addSubview(indicatorView)
         indicatorView.isHidden = true
@@ -170,24 +102,14 @@ class ViewController: UIViewController, UITableViewDelegate {
         activityIndicator.center = view.center
         
         view.backgroundColor = .white
-//        field.delegate = self
         table.delegate = self
         table.dataSource = self
 
         NSLayoutConstraint.activate([
-            
-            
             table.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
             table.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
             table.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             table.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor)
-            
-            
-//            field.heightAnchor.constraint(equalToConstant: 50),
-//            field.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 20),
-//            field.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -20),
-//            field.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor, constant: -10)
-            
         ])
     }
     
@@ -200,6 +122,7 @@ class ViewController: UIViewController, UITableViewDelegate {
                 switch result {
                 case .success(let output):
                     self?.models.append(output.replacingOccurrences(of: "\n\n", with: ""))
+                    
                     DispatchQueue.main.async {
                         self?.indicatorView.isHidden = true
                         self?.activityIndicator.startAnimating()
@@ -251,7 +174,7 @@ extension ViewController: UITableViewDataSource {
 extension ViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        didTapSubmit()
+        didTapSubmit(for: textField.text ?? "")
         return true
     }
 }
