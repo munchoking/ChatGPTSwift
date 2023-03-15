@@ -19,19 +19,22 @@ class TextInputAccessoryView: UIView {
     func clearInputTextField() {
         inputTextView.text = nil
         inputTextView.showPlaceHolderLabel()
+        submitButton.tintColor = .lightGray
     }
     
     let inputTextView: InputTextView = {
         let textView = InputTextView()
 //        textView.placeholder = "Ask something"
+        textView.tag = 100
         textView.isScrollEnabled = false
         textView.font = UIFont.systemFont(ofSize: 18)
         return textView
     }()
     
     let submitButton: UIButton = {
-        let sb = UIButton(type: .system)
-        sb.setImage(UIImage(systemName: "arrow.up.circle.fill"), for: .normal)
+        let sb = UIButton(type: .custom)
+        sb.setImage(UIImage(systemName: "arrow.up.circle.fill")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        sb.tintColor = .lightGray
         sb.addTarget(self, action: #selector(didTapSubmit), for: .touchUpInside)
         return sb
     }()
@@ -39,7 +42,7 @@ class TextInputAccessoryView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-//        inputTextView.delegate = self
+        inputTextView.delegate = self
         
         backgroundColor = .white
         
@@ -79,15 +82,14 @@ class TextInputAccessoryView: UIView {
     }
 }
 
-
-//extension TextInputAccessoryView: UITextViewDelegate {
-//
-//    func textViewDidChange(_ textView: UITextView) {
-//        if let text = textView.text, !text.isEmpty {
-//            submitButton.tintColor = .blue // set the button image color to blue
-//        } else {
-//            submitButton.tintColor = .lightGray // set the button image color to light gray
-//        }
-//    }
-//
-//}
+extension TextInputAccessoryView: UITextViewDelegate {
+    
+    func textViewDidChange(_ textView: UITextView) {
+        if let text = textView.text, !text.isEmpty {
+            submitButton.tintColor = .blue // set the button image color to blue
+        } else {
+            submitButton.tintColor = .lightGray // set the button image color to light gray
+        }
+    }
+    
+}
