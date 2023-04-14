@@ -28,6 +28,7 @@ class TextInputAccessoryView: UIView {
         textView.tag = 100
         textView.isScrollEnabled = false
         textView.font = UIFont.systemFont(ofSize: 18)
+        textView.autocorrectionType = .no
         return textView
     }()
     

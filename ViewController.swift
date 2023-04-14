@@ -130,9 +130,11 @@ class ViewController: UIViewController, UITableViewDelegate, TextInputAccessoryV
                         self?.table.scrollToRow(at: IndexPath(row: (self?.models.count)! - 1, section: 0), at: .bottom, animated: true)
                     }
                 case .failure:
-                    self?.indicatorView.isHidden = true
-                    self?.activityIndicator.startAnimating()
-                    print("Failed")
+                    DispatchQueue.main.async {
+                        self?.indicatorView.isHidden = true
+                        self?.activityIndicator.startAnimating()
+                        print("Failed")
+                    }
                 }
             }
         }
